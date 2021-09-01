@@ -1,1 +1,1 @@
-# sub payment system to check discount for grapg like structuer 
+# sub payment system to check discount for graph like structuer 
