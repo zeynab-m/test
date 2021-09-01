@@ -1,0 +1,43 @@
+version: "3.7"
+
+services:
+  redis:
+    image: "redis:alpine"
+    networks:
+      - ZI-NET
+  db:
+    build: ./psql
+    restart: on-failure:5
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5432:5432
+    networks:
+      - ZI-NET
+  web:
+    build: .
+    command:
+      - test.js
+    ports:
+      - 80:1508
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - .:/code
+    environment:
+      - DB_DIALECT=postgres
+      - PORT=1508
+      - REDIS=Enable
+      - DB_NAME=postgres
+      - SECRET_KEY=zi_test
+    networks:
+      - ZI-NET
+
+networks:
+    ZI-NET:
+        driver: bridge
